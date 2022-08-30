@@ -2470,6 +2470,29 @@ s32 CARD_Init(const char *gamecode,const char *company)
 	return CARD_ERROR_READY;
 }
 
+static s32 __card_test_custom_command(s32 chn)
+{
+    u8 val[2];
+    s32 ret;
+    u32 err;
+
+    err = 0;
+    val[0] = 0x21; val[1] = 0xFF;
+    if(EXI_Imm(chn, val, 2, EXI_WRITE, NULL)==0) err |= 0x01;
+    if (EXI_Sync(chn)==0) err |= 0x02;
+    if (EXI_Deselect(chn)==0) err |= 0x10;
+
+    if (err) ret = CARD_ERROR_NOCARD;
+    else ret = CARD_ERROR_READY;
+
+    return ret;
+}
+
+s32 CARD_Command_Test(s32 chn)
+{
+    return __card_test_custom_command(chn);
+}
+
 s32 CARD_Probe(s32 chn)
 {
 	return EXI_Probe(chn);

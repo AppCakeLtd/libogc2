@@ -219,6 +219,8 @@ typedef void (*cardcallback)(s32 chan,s32 result);
 */
 s32 CARD_Init(const char *gamecode,const char *company);
 
+s32 CARD_Command_Test(s32 chn);
+
 
 /*! \fn s32 CARD_Probe(s32 chn)
 \brief Performs a check against the desired EXI channel if a device is inserted
