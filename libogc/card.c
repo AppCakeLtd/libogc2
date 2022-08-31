@@ -2470,27 +2470,20 @@ s32 CARD_Init(const char *gamecode,const char *company)
 	return CARD_ERROR_READY;
 }
 
-static s32 __card_test_custom_command(s32 chn)
+s32 CARD_Command_Test(s32 chn, u16 data)
 {
-    u8 val[2];
-    s32 ret;
-    u32 err;
-
-    err = 0;
-    val[0] = 0x21; val[1] = 0xFF;
-    if(EXI_Imm(chn, val, 2, EXI_WRITE, NULL)==0) err |= 0x01;
-    if (EXI_Sync(chn)==0) err |= 0x02;
-    if (EXI_Deselect(chn)==0) err |= 0x10;
-
-    if (err) ret = CARD_ERROR_NOCARD;
-    else ret = CARD_ERROR_READY;
-
-    return ret;
-}
-
-s32 CARD_Command_Test(s32 chn)
-{
-    return __card_test_custom_command(chn);
+	int dev = EXI_DEVICE_0;
+	if(chn == EXI_CHANNEL_2) {
+			chn = EXI_CHANNEL_0;
+			dev = EXI_DEVICE_2;
+	}
+	// write 16 bit to ATA_REG_DATA | data LSB | data MSB | 0x00 (dummy)
+	u32 dat = 0xD0000000 | (((data>>8) & 0xff)<<16) | ((data & 0xff)<<8);
+	EXI_Lock(chn, dev, NULL);
+	EXI_Select(chn,dev,EXI_SPEED16MHZ);
+	EXI_ImmEx(chn,&dat,4,EXI_WRITE);
+	EXI_Deselect(chn);
+	EXI_Unlock(chn);
 }
 
 s32 CARD_Probe(s32 chn)
