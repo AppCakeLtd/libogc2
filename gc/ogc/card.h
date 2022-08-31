@@ -219,7 +219,7 @@ typedef void (*cardcallback)(s32 chan,s32 result);
 */
 s32 CARD_Init(const char *gamecode,const char *company);
 
-s32 CARD_Command_Test(s32 chn, u16 data);
+s32 MCP_Send_Cmd(s32 chn, void *buffer, u32 length);
 
 
 /*! \fn s32 CARD_Probe(s32 chn)
