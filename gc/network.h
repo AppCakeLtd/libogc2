@@ -39,6 +39,8 @@
 #define SO_RCVTIMEO			0x1006    /* receive timeout */
 #define  SO_ERROR			0x1007    /* get error status and clear */
 #define  SO_TYPE			0x1008    /* get socket type */
+#define SO_CONTIMEO			0x1009    /* connect timeout */
+#define SO_NO_CHECK			0x100a    /* don't create UDP checksum */
 
 
 
@@ -276,6 +278,7 @@ s32 net_recvfrom(s32 s,void *mem,s32 len,u32 flags,struct sockaddr *from,socklen
 s32 net_read(s32 s,void *mem,s32 len);
 s32 net_close(s32 s);
 s32 net_select(s32 maxfdp1,fd_set *readset,fd_set *writeset,fd_set *exceptset,struct timeval *timeout);
+s32 net_getsockopt(s32 s,u32 level,u32 optname,void *optval,socklen_t *optlen);
 s32 net_setsockopt(s32 s,u32 level,u32 optname,const void *optval,socklen_t optlen);
 s32 net_ioctl(s32 s, u32 cmd, void *argp);
 s32 net_fcntl(s32 s, u32 cmd, u32 flags);
